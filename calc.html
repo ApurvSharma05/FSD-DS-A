@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        .calculator {
+            background-color: #333;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        #display {
+            width: 100%;
+            height: 60px;
+            font-size: 24px;
+            text-align: right;
+            margin-bottom: 10px;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        button {
+            height: 60px;
+            font-size: 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            transition: background-color 0.3s;
+        }
+        .operator {
+            background-color: #ff9500;
+            color: white;
+        }
+        .equals {
+            background-color: #2196F3;
+            color: white;
+        }
+        .clear {
+            background-color: #f44336;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <input type="text" id="display" readonly>
+        <div class="buttons">
+            <button class="clear" onclick="clearDisplay()">C</button>
+            <button onclick="addToDisplay('(')">(</button>
+            <button onclick="addToDisplay(')')">)</button>
+            <button class="operator" onclick="setOperation('/')">/</button>
+            
+            <button class="digit" onclick="addToDisplay('7')">7</button>
+            <button class="digit" onclick="addToDisplay('8')">8</button>
+            <button class="digit" onclick="addToDisplay('9')">9</button>
+            <button class="operator" onclick="setOperation('*')">*</button>
+            
+            <button class="digit" onclick="addToDisplay('4')">4</button>
+            <button class="digit" onclick="addToDisplay('5')">5</button>
+            <button class="digit" onclick="addToDisplay('6')">6</button>
+            <button class="operator" onclick="setOperation('-')">-</button>
+            
+            <button class="digit" onclick="addToDisplay('1')">1</button>
+            <button class="digit" onclick="addToDisplay('2')">2</button>
+            <button class="digit" onclick="addToDisplay('3')">3</button>
+            <button class="operator" onclick="setOperation('+')">+</button>
+            
+            <button class="digit" onclick="addToDisplay('0')">0</button>
+            <button onclick="addToDisplay('.')">.</button>
+            <button class="equals" onclick="calculate()">=</button>
+            <button onclick="backspace()">⌫</button>
+        </div>
+    </div>
+
+    <script>
+        let currentOperation = '';
+        let firstOperand = '';
+        let waitingForSecondOperand = false;
+
+        function addToDisplay(value) {
+            const display = document.getElementById('display');
+            if (waitingForSecondOperand) {
+                display.value = value;
+                waitingForSecondOperand = false;
+            } else {
+                display.value += value;
+            }
+        }
+
+        function clearDisplay() {
+            document.getElementById('display').value = '';
+            currentOperation = '';
+            firstOperand = '';
+            waitingForSecondOperand = false;
+            resetDigitColors();
+        }
+
+        function backspace() {
+            const display = document.getElementById('display');
+            display.value = display.value.slice(0, -1);
+        }
+
+        function setOperation(operation) {
+            const display = document.getElementById('display');
+            if (display.value === '' && operation === '-') {
+                // Allow negative numbers
+                display.value = '-';
+                return;
+            }
+
+            if (display.value !== '') {
+                firstOperand = display.value;
+                currentOperation = operation;
+                waitingForSecondOperand = true;
+                
+                // Change color based on operation
+                resetDigitColors();
+                switch(operation) {
+                    case '+':
+                        setDigitColors('#4CAF50'); // Green
+                        break;
+                    case '-':
+                        setDigitColors('#FF5722'); // Orange/Red
+                        break;
+                    case '*':
+                        setDigitColors('#2196F3'); // Blue
+                        break;
+                    case '/':
+                        setDigitColors('#9C27B0'); // Purple
+                        break;
+                }
+            }
+        }
+
+        function calculate() {
+            const display = document.getElementById('display');
+            if (currentOperation && firstOperand && !waitingForSecondOperand) {
+                const secondOperand = display.value;
+                let result;
+                
+                switch(currentOperation) {
+                    case '+':
+                        result = parseFloat(firstOperand) + parseFloat(secondOperand);
+                        break;
+                    case '-':
+                        result = parseFloat(firstOperand) - parseFloat(secondOperand);
+                        break;
+                    case '*':
+                        result = parseFloat(firstOperand) * parseFloat(secondOperand);
+                        break;
+                    case '/':
+                        result = parseFloat(firstOperand) / parseFloat(secondOperand);
+                        break;
+                }
+                
+                display.value = result;
+                currentOperation = '';
+                firstOperand = '';
+                waitingForSecondOperand = false;
+                
+                // Reset colors after calculation
+                setTimeout(resetDigitColors, 1000);
+            }
+        }
+
+        function setDigitColors(color) {
+            const digits = document.querySelectorAll('.digit');
+            digits.forEach(digit => {
+                digit.style.backgroundColor = color;
+                digit.style.color = 'white';
+            });
+        }
+
+        function resetDigitColors() {
+            const digits = document.querySelectorAll('.digit');
+            digits.forEach(digit => {
+                digit.style.backgroundColor = '#f0f0f0';
+                digit.style.color = 'black';
+            });
+        }
+    </script>
+</body>
+</html></div>
