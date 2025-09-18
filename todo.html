@@ -8,10 +8,10 @@
         h1 { text-align: center; }
         .todo-header { display: flex; margin-bottom: 20px; }
         #taskInput { flex: 1; padding: 10px; font-size: 16px; }
-        #addBtn { padding: 10px 15px; background: #4CAF50; color: #fff; border: none; cursor: pointer; }
+        #addBtn { padding: 10px 15px; background: #4CAF50; color: #fff; border: none; cursor: pointer; font-size: 18px; }
         ul { list-style: none; padding: 0; }
         li { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #f9f9f9; margin-bottom: 8px; border-radius: 4px; }
-        .delete-btn { background: #ff4d4d; color: #fff; border: none; padding: 5px 10px; cursor: pointer; }
+        .delete-btn { background: #ff4d4d; color: #fff; border: none; padding: 5px 10px; cursor: pointer; font-size: 18px; }
         .completed { text-decoration: line-through; color: #888; }
     </style>
 </head>
@@ -19,7 +19,7 @@
     <h1>ToDo List</h1>
     <div class="todo-header">
         <input type="text" id="taskInput" placeholder="Add a new task...">
-        <button id="addBtn">Add</button>
+        <button id="addBtn" title="Add Task">&#10003;</button>
     </div>
     <ul id="taskList"></ul>
     <script>
@@ -42,8 +42,9 @@
             if (completed) span.classList.add('completed');
             span.onclick = () => { span.classList.toggle('completed'); saveTasks(); };
             const del = document.createElement('button');
-            del.textContent = 'Delete';
+            del.innerHTML = '&#10005;';
             del.className = 'delete-btn';
+            del.title = 'Delete Task';
             del.onclick = () => { li.remove(); saveTasks(); };
             li.append(span, del);
             taskList.append(li);
