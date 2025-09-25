@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Expense Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .container {
+            background: #fff;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px #0001;
+            padding: 20px;
+            margin-top: 40px;
+            width: 100%;
+            max-width: 370px;
+        }
+        h1 {
+            font-size: 20px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin: 10px 0 4px;
+            font-size: 13px;
+        }
+        input, textarea, button {
+            width: 100%;
+            font-size: 14px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            padding: 7px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        textarea { resize: vertical; min-height: 40px; }
+        button {
+            background: #2fb14b;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            margin-top: 8px;
+            padding: 9px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+        th, td {
+            padding: 6px 4px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+        }
+        .action-btn {
+            background: #eee;
+            border: none;
+            border-radius: 3px;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .footer-row {
+            margin-top: 10px;
+            text-align: right;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Expense Tracker</h1>
+        <label>Expense Name
+            <input id="name" type="text" placeholder="e.g. Groceries">
+        </label>
+        <label>Amount (₹)
+            <input id="amount" type="number" placeholder="e.g. 500">
+        </label>
+        <label>Description
+            <textarea id="desc" placeholder="e.g. Fruits and vegetables"></textarea>
+        </label>
+        <label>Date
+            <input id="date" type="date">
+        </label>
+        <button id="add">Add Expense</button>
+        <table id="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Amount</th>
+                    <th>Description</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <div class="footer-row">
+            Total: <span id="total">₹0</span>
+        </div>
+    </div>
+<script>
+    const nameInput = document.getElementById('name');
+    const amountInput = document.getElementById('amount');
+    const descInput = document.getElementById('desc');
+    const dateInput = document.getElementById('date');
+    const addButton = document.getElementById('add');
+    const tableBody = document.querySelector('#table tbody');
+    const totalElement = document.getElementById('total');
+    let expenses = [];
+
+    function showExpenses() {
+        tableBody.innerHTML = '';
+        let total = 0;
+        expenses.forEach((expense, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${escapeHtml(expense.name)}</td>
+                <td>₹${Number(expense.amount).toFixed(2)}</td>
+                <td>${escapeHtml(expense.desc)}</td>
+                <td>${expense.date || ''}</td>
+                <td><button data-index="${index}" class="action-btn">Delete</button></td>
+            `;
+            tableBody.appendChild(row);
+            total += Number(expense.amount) || 0;
+        });
+        totalElement.textContent = '₹' + total.toFixed(2);
+    }
+
+    function escapeHtml(text) {
+        return String(text)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+    }
+
+    addButton.addEventListener('click', () => {
+        const name = nameInput.value.trim();
+        const amount = parseFloat(amountInput.value);
+        const desc = descInput.value.trim();
+        const date = dateInput.value;
+        if (!name || !amount) {
+            alert('Please provide name and amount');
+            return;
+        }
+        expenses.unshift({ name, amount, desc, date });
+        nameInput.value = '';
+        amountInput.value = '';
+        descInput.value = '';
+        dateInput.value = '';
+        showExpenses();
+    });
+
+    tableBody.addEventListener('click', event => {
+        if (event.target.matches('button')) {
+            const index = Number(event.target.dataset.index);
+            expenses.splice(index, 1);
+            showExpenses();
+        }
+    });
+
+    showExpenses();
+</script>
+</body>
+</html>
