@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Marks Manager</title>
+</head>
+<body>
+    <div class="container">
+        <h2>Student Marks Manager</h2>
+        <div>
+            <label for="name">Student Name:</label>
+            <input type="text" id="name">
+            <label for="marks">Marks:</label>
+            <input type="number" id="marks">
+            <button onclick="addStudent()">Add Student</button>
+        </div>
+        <div class="student-list">
+            <button onclick="displayStudents()">Show All</button>
+            <button onclick="showPassedStudents()">Passed</button>
+            <button onclick="showAverage()">Average</button>
+            <button onclick="showTopper()">Topper</button>
+            <div id="result"></div>
+        </div>
+    </div>
+
+    <script>
+        let students = [];
+
+        function addStudent() {
+            const name = document.getElementById('name').value;
+            const marks = Number(document.getElementById('marks').value);
+            if (name && !isNaN(marks) && document.getElementById('marks').value !== '') {
+                students.push({ name, marks });
+                alert('Student added successfully');
+                document.getElementById('name').value = '';
+                document.getElementById('marks').value = '';
+            } else {
+                alert('Please enter a valid name and marks.');
+            }
+        }
+
+        function displayResult(text) {
+            document.getElementById('result').innerHTML = text;
+        }
+
+        function displayStudents() {
+            if (students.length === 0) {
+                displayResult('No students to display.');
+                return;
+            }
+            const list = students.map(s => `<li>${s.name}: ${s.marks}</li>`).join('');
+            displayResult(`<ul>${list}</ul>`);
+        }
+
+        function showPassedStudents() {
+            const passed = students.filter(s => s.marks >= 40);
+            if (passed.length === 0) {
+                displayResult('No students passed.');
+                return;
+            }
+            const list = passed.map(s => `<li>${s.name}: ${s.marks}</li>`).join('');
+            displayResult(`<ul>${list}</ul>`);
+        }
+
+        function showAverage() {
+            if (students.length === 0) {
+                displayResult('No students to calculate average.');
+                return;
+            }
+            const avg = students.reduce((acc, s) => acc + s.marks, 0) / students.length;
+            displayResult(`Average Marks: ${avg.toFixed(2)}`);
+        }
+
+        function showTopper() {
+            if (students.length === 0) {
+                displayResult('No students to find topper.');
+                return;
+            }
+            const maxMarks = Math.max(...students.map(s => s.marks));
+            const toppers = students.filter(s => s.marks === maxMarks);
+            const names = toppers.map(s => s.name).join(', ');
+            displayResult(`Topper(s): ${names} (${maxMarks} marks)`);
+        }
+    </script>
+</body>
+</html>
