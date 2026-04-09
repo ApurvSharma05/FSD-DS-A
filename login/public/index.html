@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login System</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="card">
+        <h1>Welcome Back</h1>
+        <p class="subtitle">Sign in or create an account to continue.</p>
+
+        <div class="tabs">
+          <button id="showLogin" class="tab active" type="button">Login</button>
+          <button id="showRegister" class="tab" type="button">Register</button>
+        </div>
+
+        <form id="loginForm" class="auth-form">
+          <label>
+            Email
+            <input type="email" id="loginEmail" required placeholder="you@example.com" />
+          </label>
+          <label>
+            Password
+            <input type="password" id="loginPassword" required minlength="6" placeholder="••••••••" />
+          </label>
+          <button type="submit" class="btn">Login</button>
+        </form>
+
+        <form id="registerForm" class="auth-form hidden">
+          <label>
+            Name
+            <input type="text" id="registerName" required placeholder="Your name" />
+          </label>
+          <label>
+            Email
+            <input type="email" id="registerEmail" required placeholder="you@example.com" />
+          </label>
+          <label>
+            Password
+            <input type="password" id="registerPassword" required minlength="6" placeholder="At least 6 characters" />
+          </label>
+          <button type="submit" class="btn">Create account</button>
+        </form>
+
+        <p id="message" class="message"></p>
+      </section>
+
+      <section id="profileCard" class="card hidden">
+        <h2>Logged In</h2>
+        <p id="profileName"></p>
+        <p id="profileEmail"></p>
+        <button id="logoutBtn" class="btn danger" type="button">Logout</button>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
